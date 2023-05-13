@@ -45,63 +45,63 @@ def colorize(image, hue):
     # `hue` (hue within 0-360); returns another PIL image.
     img = image.convert('RGBA')
     arr = np.array(np.asarray(img).astype('float'))
-    new_img = Image.fromarray(shift_hue(arr, hue/360.).astype('uint8'), 'RGBA')
-
-    return new_img
+    return Image.fromarray(shift_hue(arr, hue/360.).astype('uint8'), 'RGBA')
 
 def number_and_border(target_directory):
-  seed = 0
-  for infile in glob.glob(os.path.join(target_directory, "*.bmp")):
-    image = Image.open(infile)
-    width, height = image.size 
-    draw = ImageDraw.Draw(image)
+    seed = 0
+    for infile in glob.glob(os.path.join(target_directory, "*.bmp")):
+        image = Image.open(infile)
+        width, height = image.size
+        draw = ImageDraw.Draw(image)
 
-    # WRITE NUMBER IF FOUND ===============================
-    text_found = re.findall(regex_numbers_no_letters, str(infile)) 
-    if (text_found):
-      text_outputA = text_found[0].strip()
-      text_outputB = re.sub(regex_underscore,'',text_outputA,);
-      text_outputC = re.sub(regex_dot,'',text_outputB,);
-      text_final_number = text_outputC.lstrip('0')
+        if text_found := re.findall(regex_numbers_no_letters, str(infile)):
+            text_outputA = text_found[0].strip()
+            text_outputB = re.sub(regex_underscore,'',text_outputA,);
+            text_outputC = re.sub(regex_dot,'',text_outputB,);
+            text_final_number = text_outputC.lstrip('0')
 
-      textsize_relative_percent = 0.4
-      textsize_final = round( ((width+height)/2) * textsize_relative_percent ) 
-      print("image width = " + str(width) + "   >>>>>  " + " text relative size =  " + str(textsize_final) )
-      textwidth = round(textsize_final/2)
-      textheight = round(textsize_final/2)
-      #textwidth, textheight = draw.textsize(text_final_number)
+            textsize_relative_percent = 0.4
+            textsize_final = round( ((width+height)/2) * textsize_relative_percent )
+            print(
+                f"image width = {str(width)}   >>>>>  "
+                + " text relative size =  "
+                + str(textsize_final)
+            )
+            textwidth = round(textsize_final/2)
+            textheight = round(textsize_final/2)
+            #textwidth, textheight = draw.textsize(text_final_number)
 
-      margin = 2
-      x = (width/2) - margin - textwidth
-      y = (height/2) - margin - textheight
-      textsize_relative_percent = 0.4
-      textsize_final = round( ((width+height)/2) * textsize_relative_percent ) 
-      print("image width = " + str(width) + "   >>>>>  " + " text relative size =  " + str(textsize_final) )
+            margin = 2
+            x = (width/2) - margin - textwidth
+            y = (height/2) - margin - textheight
+            textsize_relative_percent = 0.4
+            textsize_final = round( ((width+height)/2) * textsize_relative_percent )
+            print("image width = " + str(width) + "   >>>>>  " + " text relative size =  " + str(textsize_final) )
 
-      font_path = ImageFont.truetype(r'C:/FONTS/Roboto-Bold.ttf', textsize_final) 
-      draw.text((x+1, y), text_final_number , fill ="white", font=font_path, align ="left")
-      draw.text((x-1, y), text_final_number , fill ="white", font=font_path, align ="left")
-      draw.text((x, y+1), text_final_number , fill ="white", font=font_path, align ="left")
-      draw.text((x, y-1), text_final_number , fill ="white", font=font_path, align ="left")
+            font_path = ImageFont.truetype(r'C:/FONTS/Roboto-Bold.ttf', textsize_final)
+            draw.text((x+1, y), text_final_number , fill ="white", font=font_path, align ="left")
+            draw.text((x-1, y), text_final_number , fill ="white", font=font_path, align ="left")
+            draw.text((x, y+1), text_final_number , fill ="white", font=font_path, align ="left")
+            draw.text((x, y-1), text_final_number , fill ="white", font=font_path, align ="left")
 
-      draw.text((x, y), text_final_number , fill ="black", font=font_path, align ="center")
+            draw.text((x, y), text_final_number , fill ="black", font=font_path, align ="center")
 
-    # BORDER DRAW 4 LINES ON EDGES ===============================
-    border = 3
-    border_width = 5
-    draw.line((border,border, width-border, border), fill=20, width=border_width)
-    draw.line((border,height-border, width-border, height-border), fill=20, width=border_width)
-    draw.line((border,border, border, height-border), fill=20, width=border_width)
-    draw.line((width-border,height-border, width-border, border), fill=20, width=border_width)
+        # BORDER DRAW 4 LINES ON EDGES ===============================
+        border = 3
+        border_width = 5
+        draw.line((border,border, width-border, border), fill=20, width=border_width)
+        draw.line((border,height-border, width-border, height-border), fill=20, width=border_width)
+        draw.line((border,border, border, height-border), fill=20, width=border_width)
+        draw.line((width-border,height-border, width-border, border), fill=20, width=border_width)
 
-    # RANDOM COLOR HUE SHIFT ===============================
-    seed = seed+1 
-    random.seed(seed)
-    rand_hue = random.randrange(360) 
-    image = colorize(image,rand_hue)
+        # RANDOM COLOR HUE SHIFT ===============================
+        seed = seed+1
+        random.seed(seed)
+        rand_hue = random.randrange(360)
+        image = colorize(image,rand_hue)
 
-    # SAVE IMAGE ===============================
-    image.save(infile)
+        # SAVE IMAGE ===============================
+        image.save(infile)
 
 # MAIN for windows ===============================
 if __name__ == '__main__':

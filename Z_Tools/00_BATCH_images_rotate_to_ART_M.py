@@ -65,8 +65,7 @@ def gauss(mean,sigma):
   from math import sqrt,log,pi,cos
   a=uniform(0,1)
   b=uniform(0,1)
-  x=sqrt(-2*log(a))*cos(2*pi*b)
-  return(x)
+  return sqrt(-2*log(a))*cos(2*pi*b)
 
 def add_noise_guass(image,amount):
   if len(image.shape)==3 :
@@ -89,7 +88,7 @@ def tex_to_art_m(target_directory):
 
   if not os.path.isdir(target_directory+ARTM_folderpath): # create ART_M folder
     os.mkdir(target_directory+ARTM_folderpath)
-  
+
   for infile in glob.glob(os.path.join(target_directory, "*.bmp")): 
     image_current = Image.open(infile)
     width, height = image_current.size
@@ -104,7 +103,7 @@ def tex_to_art_m(target_directory):
 
     #//============== LARGER VERSIONS FIT CROPPED PASTED ONTOP OF EACH OTHER ================================================
     # make larger versions to paste into bg for edge padding
-    image_main_bgA = image_current.resize( (artm_high_resolution+8,artm_high_resolution+8) , Image.NEAREST) 
+    image_main_bgA = image_current.resize( (artm_high_resolution+8,artm_high_resolution+8) , Image.NEAREST)
     image_main_bgB = image_main_bgA.resize( (artm_high_resolution+16,artm_high_resolution+16) , Image.NEAREST)
     image_main_bgC = image_main_bgB.resize( (artm_high_resolution+24,artm_high_resolution+24) , Image.NEAREST)
     image_main_bgD = image_main_bgC.resize( (artm_high_resolution+32,artm_high_resolution+32) , Image.NEAREST)
@@ -125,7 +124,7 @@ def tex_to_art_m(target_directory):
 
     image_current = Image.composite( image_main_rotated_bg , image_main_rotated , image_main_rotated )
     image_original_resized = image_original.resize( (image_main_rotated.size) , Image.NEAREST)
-    
+
     final_size_padded = (artm_landtile_size+2, artm_landtile_size+2)
     final_size = (artm_landtile_size, artm_landtile_size)
     #image_current = image_current.resize(final_size, Image.BICUBIC)
@@ -152,15 +151,17 @@ def tex_to_art_m(target_directory):
     image_current_png = image_current.putalpha(red)
 
     # SAVE IMAGE ===============================
-    print("SAVING >>>   " + str(infile))
+    print(f"SAVING >>>   {str(infile)}")
     png_filename = re.sub('.bmp','.png',str(infile),);
 
     #image_current.save(png_filename)
     image_final_output = Image.new("RGB", final_size, (0, 0, 0))
 
-    final_outputpath = target_directory + "/" + ARTM_folderpath + "/" + Path(infile).stem + ".bmp"
+    final_outputpath = (
+        f"{target_directory}/{ARTM_folderpath}/{Path(infile).stem}.bmp")
 
-    final_outputpath = target_directory + "/" + ARTM_folderpath + "/" + Path(infile).stem + ".png"
+    final_outputpath = (
+        f"{target_directory}/{ARTM_folderpath}/{Path(infile).stem}.png")
     image_current.save(final_outputpath)
 
 # MAIN for windows ===============================
